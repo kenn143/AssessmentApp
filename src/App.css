@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,138 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+
+
+.container {
+  display: flex;
+  padding: 20px;
+  gap: 10px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+
+.left {
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: flex-start;
+  max-width: 500px;
+}
+
+.right {
+  flex: 1;
+}
+
+.draggable-box,
+.empty-box {
+  width: 90px;
+  height: 60px;
+  background-color: #1C335D;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* font-weight: bold; */
+  margin: 5px;
+  cursor: grab;
+  font-size:12px;
+  padding:5px;
+  color:white;
+}
+
+.empty-box {
+  background-color: transparent;
+  border: 1px dashed #aaa;
+}
+
+
+.center-divider {
+  width: 2px;
+  background-color: black;
+  margin: 0 10px;
+}
+
+
+.pyramid-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 60px);
+  gap: 60px;
+  justify-content: center;
+}
+
+.pyramid-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pyramid-box {
+  width: 90px;
+  height: 60px;
+  background-color: #f2f2f2;
+  border: 1px solid #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:5px;
+
+}
+
+.pyramid-box.filled {
+  background-color:lightblue;
+  font-size: 12px;
+  padding:5px;
+  overflow: hidden;
+}
+
+.pyramid-box.invisible {
+  visibility: hidden;
+}
+
+.score-row {
+  margin-bottom: 10px;
+}
+
+.score-cell {
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  line-height: 30px;
+}
+
+
+.generate-btn {
+  margin-top: 20px;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+.generate-btn:hover {
+  background: #0056b3;
+}
+
+.json-output {
+  margin-top: 10px;
+  background-color: #222;
+  color: #0f0;
+  padding: 10px;
+  font-size: 14px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.submit{
+  text-align: center;
 }
