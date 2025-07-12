@@ -271,9 +271,6 @@ export default function Assessment() {
         </button>
         </div>
 
-        {jsonOutput && (
-          <pre className="json-output">{JSON.stringify(jsonOutput, null, 2)}</pre>
-        )}
 
       </div>
     </div>
