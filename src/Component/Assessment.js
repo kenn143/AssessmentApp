@@ -250,7 +250,6 @@ export default function Assessment() {
               return (
                 <div className="pyramid-grid" key={rowIndex}>
                   {cells}
-                  {rowIndex}
                 </div>
               );
             })}
