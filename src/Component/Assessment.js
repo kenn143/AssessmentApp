@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from "react";
 import '../App.css'
+import { getToken, removeToken } from '../auth';
+import { ToastContainer, toast } from 'react-toastify';
 
 const columnScores = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
 
@@ -9,6 +11,12 @@ export default function Assessment() {
   const [rightBoxes, setRightBoxes] = useState(Array(25).fill(null));
   const [jsonOutput, setJsonOutput] = useState(null);
   const [boxOrigins, setBoxOrigins] = useState({});
+  const user = getToken();
+
+  const handleLogout = () => {
+    removeToken();
+    window.location.reload();
+  };
 
   
 
@@ -78,8 +86,9 @@ export default function Assessment() {
     return offset + boxIndex;
   };
 
-  const generateJSON = () => {
+  const generateJSON = async() => {
     const result = [];
+
 
     pyramidRows.forEach((row, rowIndex) => {
       row.forEach((box, boxIndex) => {
@@ -97,6 +106,20 @@ export default function Assessment() {
     const json = {
       record:result
     }
+
+  const response = await fetch('https://hook.us2.make.com/415jpaj3alwy9nceagf5rg7oprt8s6v6', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(json),
+    });
+    if(response.ok){
+      toast.success("Submitted Successfully!");
+     }else{
+      toast.error('Error');
+     }
+
 
     setJsonOutput(json);
   };
@@ -127,11 +150,11 @@ export default function Assessment() {
     const originalIndex = boxOrigins[box];
   
     if (originalIndex !== undefined && newLeft[originalIndex] === null) {
-      // Return to original index
+  
       newLeft[originalIndex] = box;
       newRight[index] = null;
     } else {
-      // Or return to first empty slot
+
       const emptyIndex = newLeft.findIndex((item) => item === null);
       if (emptyIndex !== -1) {
         newLeft[emptyIndex] = box;
@@ -145,8 +168,6 @@ export default function Assessment() {
     setLeftBoxes(newLeft);
     setRightBoxes(newRight);
   };
-  
-
   
   useEffect(() => {
     const fetchBoxes = async () => {
@@ -181,9 +202,11 @@ export default function Assessment() {
     fetchBoxes();
   }, []);
   
+
   
   return (
-    <div className="container">
+  <div className="container">
+  
       <div
         className="column left"
         onDrop={handleDropToLeft}
@@ -208,6 +231,46 @@ export default function Assessment() {
       <div className="center-divider"></div>
 
       <div className="column right" >
+
+      <div
+      style={{
+        // borderBottom: "5px solid black",
+        width: "100%",                 
+        display: "flex",
+        justifyContent: "flex-end",     
+        padding: "10px",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",      
+          alignItems: "flex-end",       
+          gap: "5px",
+        }}
+      >
+        {/* <div>{user?.email}</div> */}
+        <button
+          onClick={handleLogout}
+          // style={{
+          //   padding: "9px 15px",
+          //   backgroundColor: "#f44336",
+          //   color: "white",
+          //   border: "none",
+          //   borderRadius: "4px",
+          //   cursor: "pointer",
+          //   marginBottom:"23px",
+          //   marginTop:"-11px"
+
+          // }}
+          className="logout-btn"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+
     
         <div style={{ borderBottom: '2px solid black' }}>
         <div className="pyramid-rows" >
@@ -271,8 +334,8 @@ export default function Assessment() {
         </button>
         </div>
 
-
       </div>
+      <ToastContainer />
     </div>
   );
 };
