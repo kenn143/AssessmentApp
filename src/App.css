@@ -58,6 +58,12 @@
   align-content: flex-start;
   max-width: 500px;
   padding:20px;
+
+
+  height: 700px;            
+  overflow-y: auto;      
+  border: 1px solid #ccc; 
+    
 }
 
 .right {

@@ -24,25 +24,74 @@ export default function Assessment() {
     e.dataTransfer.setData("text/plain", `${side}-${index}`);
   };
 
-  const handleDropToPyramid = (e, rightIndex) => {
+  // const handleDropToPyramid = (e, rightIndex) => {
+  //   const data = e.dataTransfer.getData("text/plain");
+  //   const [side, idx] = data.split("-");
+  //   const index = parseInt(idx, 10);
+  
+  //   if (side === "left") {
+  //     const draggedBox = leftBoxes[index];
+  //     if (draggedBox && !rightBoxes[rightIndex]) {
+  //       const newLeft = [...leftBoxes];
+  //       const newRight = [...rightBoxes];
+  //       newLeft[index] = null;
+  //       newRight[rightIndex] = draggedBox;
+  
+  //       setLeftBoxes(newLeft);
+  //       setRightBoxes(newRight);
+  //       setBoxOrigins((prev) => ({ ...prev, [draggedBox]: index }));
+  //     }
+  //   }
+  // };
+
+  const handleDropToPyramid = (e, dropIndex) => {
     const data = e.dataTransfer.getData("text/plain");
     const [side, idx] = data.split("-");
-    const index = parseInt(idx, 10);
+    const sourceIndex = parseInt(idx, 10);
   
     if (side === "left") {
-      const draggedBox = leftBoxes[index];
-      if (draggedBox && !rightBoxes[rightIndex]) {
-        const newLeft = [...leftBoxes];
-        const newRight = [...rightBoxes];
-        newLeft[index] = null;
-        newRight[rightIndex] = draggedBox;
+      const draggedBox = leftBoxes[sourceIndex];
+  
+      if (!draggedBox) return;
+  
+      const newLeft = [...leftBoxes];
+      const newRight = [...rightBoxes];
+  
+
+      let targetIndex = dropIndex;
+      while (targetIndex < newRight.length && newRight[targetIndex]) {
+        targetIndex++;
+      }
+  
+      if (targetIndex < newRight.length) {
+        // newLeft[sourceIndex] = null;
+        const newLeft = leftBoxes.filter((_, i) => i !== sourceIndex); 
+        newRight[targetIndex] = draggedBox;
   
         setLeftBoxes(newLeft);
         setRightBoxes(newRight);
-        setBoxOrigins((prev) => ({ ...prev, [draggedBox]: index }));
+        setBoxOrigins((prev) => ({ ...prev, [draggedBox]: sourceIndex }));
+      } else {
+        console.warn("No empty slot available on the right.");
       }
     }
+  
+    if (side === "right") {
+      const draggedBox = rightBoxes[sourceIndex];
+  
+      if (!draggedBox) return;
+  
+      const newRight = [...rightBoxes];
+  
+      if (dropIndex === sourceIndex || newRight[dropIndex]) return;
+  
+      newRight[sourceIndex] = null;
+      newRight[dropIndex] = draggedBox;
+  
+      setRightBoxes(newRight);
+    }
   };
+  
   
 
   const handleDropToLeft = (e) => {
@@ -141,34 +190,46 @@ export default function Assessment() {
   //     setRightBoxes(newRight);
   //   }
   // };
+  // const handleBoxClick = (index) => {
+  //   const box = rightBoxes[index];
+  //   if (!box) return;
+  
+  //   const newLeft = [...leftBoxes];
+  //   const newRight = [...rightBoxes];
+  //   const originalIndex = boxOrigins[box];
+  
+  //   if (originalIndex !== undefined && newLeft[originalIndex] === null) {
+  
+  //     newLeft[originalIndex] = box;
+  //     newRight[index] = null;
+  //   } else {
+
+  //     const emptyIndex = newLeft.findIndex((item) => item === null);
+  //     if (emptyIndex !== -1) {
+  //       newLeft[emptyIndex] = box;
+  //       newRight[index] = null;
+  //     } else {
+  //       console.warn("No space left in left column to return the box.");
+  //       return;
+  //     }
+  //   }
+  
+  //   setLeftBoxes(newLeft);
+  //   setRightBoxes(newRight);
+  // };
+  
   const handleBoxClick = (index) => {
     const box = rightBoxes[index];
     if (!box) return;
   
-    const newLeft = [...leftBoxes];
+    const newLeft = [...leftBoxes, box]; 
     const newRight = [...rightBoxes];
-    const originalIndex = boxOrigins[box];
-  
-    if (originalIndex !== undefined && newLeft[originalIndex] === null) {
-  
-      newLeft[originalIndex] = box;
-      newRight[index] = null;
-    } else {
-
-      const emptyIndex = newLeft.findIndex((item) => item === null);
-      if (emptyIndex !== -1) {
-        newLeft[emptyIndex] = box;
-        newRight[index] = null;
-      } else {
-        console.warn("No space left in left column to return the box.");
-        return;
-      }
-    }
+    newRight[index] = null;
   
     setLeftBoxes(newLeft);
     setRightBoxes(newRight);
   };
-  
+
   useEffect(() => {
     const fetchBoxes = async () => {
       try {
