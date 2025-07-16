@@ -77,7 +77,7 @@ export default function LoginPage({onLogin}) {
     style={{
       ...styles.input,
       paddingRight: '40px', 
-      width:'344px'
+      width:'400px'
     }}
   />
   <div
@@ -141,8 +141,9 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    background: 'linear-gradient(to right, #667eea, #764ba2)',
+    // background: 'linear-gradient(to right, #667eea, #764ba2)',
     fontFamily: 'Arial, sans-serif',
+    backgroundColor:'white'
   },
   card: {
     backgroundColor: '#fff',
