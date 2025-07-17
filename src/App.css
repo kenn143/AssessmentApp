@@ -199,7 +199,7 @@
 .form-container {
   max-width: 500px;
   margin: 40px auto;
-  background-color: #f4f4f4;
+  background-color: #fff;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -243,7 +243,7 @@ form input[readOnly] {
 }
 
 form button {
-  width: 100%;
+
   background-color: #007bff;
   color: white;
   border: none;
@@ -258,31 +258,102 @@ form button:hover {
   background-color: #0056b3;
 }
 
-
-
-/* POP UP MODAL */
-/* .app-wrapper {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-.blurred {
-  filter: blur(5px);
-  pointer-events: none;
-  user-select: none;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+form select {
   width: 100%;
-  height: 100%;
-  backdrop-filter: blur(4px);
-  background-color: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px; 
+  padding-right: 40px; 
+}
+
+.btn-submit {
+  text-align: right;
+  margin-top: 17px;
+}
+
+/* THankyou Page */
+
+.thankyou-container {
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 999;
-} */
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  font-family: Arial, sans-serif;
+}
+
+
+.thankyou-box {
+  background: #fff;
+  padding: 40px 50px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+
+.checkmark {
+  font-size: 60px;
+  color: #28a745;
+  margin-bottom: 15px;
+  animation: pop 0.5s ease-in-out;
+}
+
+
+.thankyou-box h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+
+.thankyou-box p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+
+.thankyou-box button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.thankyou-box button:hover {
+  background-color: #218838;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}

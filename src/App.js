@@ -1,18 +1,47 @@
-import React, { useState,useEffect } from "react";
-import "./App.css";
-import Assessment from "./Component/Assessment";
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./Component/LoginPage";
-import { getToken } from "./auth";
-
-const columnScores = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+import Form from "./Component/Form";
+import Assessment from "./Component/Assessment";
+import { getToken } from "./auth"; 
+import ThankYouPage from "./Component/Thankyou";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  return isLoggedIn ? (
-    <Assessment />
-  ) : (
-    <LoginPage onLogin={() => setIsLoggedIn(true)} />
+  return (
+    <Router>
+      <Routes>
+        {!isLoggedIn && (
+          <Route
+            path="*"
+            element={<LoginPage onLogin={() => setIsLoggedIn(true)} />}
+          />
+        )}
+
+        {isLoggedIn && (
+          <>
+            <Route path="/" element={<Navigate to="/form" />} />
+            <Route
+              path="/form"
+              element={<Form onSubmit={() => setIsFormSubmitted(true)} />}
+            />
+            <Route
+              path="/assessment"
+              element={
+                isFormSubmitted ? (
+                  <Assessment />
+                ) : (
+                  <Navigate to="/form" replace />
+                )
+              }
+            />
+          </>
+        )}
+        <Route path="/Thankyou" element={<ThankYouPage />} />
+      </Routes>
+    </Router>
   );
 };
 

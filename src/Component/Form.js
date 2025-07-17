@@ -1,79 +1,115 @@
-import React, { useState } from "react";
+import React from "react";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
+import Assessment from "./Assessment";
 
-export default function Form() {
-  const [formData, setFormData] = useState({
-    firstName: "John",     
-    lastName: "Doe",        
-    email: "john.doe@example.com", 
-    password: "",
-    confirmPassword: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-  });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Form submitted!");
-    console.log("Submitted:", formData);
-  };
+export default function Form({ onSubmit }) {
+
+    const navigate = useNavigate();
+
+    const handleSubmit = (e)=>{
+        e.preventDefault();
+        onSubmit();
+        navigate('/assessment');
+        
+    }
+
 
   return (
     <div className="form-container">
-      <h2>
-        Once accessed with log in provided, there are fields already filled by default and non editable:<br />
-        <span className="mandatory-note">* are mandatory fields</span>
-      </h2>
-      <form onSubmit={handleSubmit}>
+      <form>
         <label>
-          First Name:
-          <input type="text" name="firstName" value={formData.firstName} readOnly />
-        </label>
-        <label>
-          Last Name:
-          <input type="text" name="lastName" value={formData.lastName} readOnly />
-        </label>
-        <label>
-          Email:
-          <input type="email" name="email" value={formData.email} readOnly />
-        </label>
-        <label>
-          Password: <span className="required">*</span>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-        </label>
-        <label>
-          Confirm Password: <span className="required">*</span>
-          <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
-        </label>
-        <label>
-          Phone:
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} />
-        </label>
-        <label>
-          Address:
-          <input type="text" name="address" value={formData.address} onChange={handleChange} />
-        </label>
-        <label>
-          City:
-          <input type="text" name="city" value={formData.city} onChange={handleChange} />
-        </label>
-        <label>
-          State:
-          <input type="text" name="state" value={formData.state} onChange={handleChange} />
-        </label>
-        <label>
-          Zip Code:
-          <input type="text" name="zip" value={formData.zip} onChange={handleChange} />
+          Company Name: <span className="required">*</span>
+          <input type="text" name="companyName" readOnly />
         </label>
 
-        <button type="submit">Submit</button>
+        <label style={{ marginBottom: "5px" }}>
+          Thank you for participating in this Corporate Dynamic Profiler
+          Assessment. Please confirm your full name (edit if necessary)
+        </label>
+
+        <label>
+          Company: <span className="required">*</span>
+          <input type="text" name="fullName" required />
+        </label>
+
+        <label>
+          Time in the company: <span className="required">*</span>
+          <input type="text" name="fullName" required />
+        </label>
+
+        <label>
+          Department Name: <span className="required">*</span>
+          <select name="department" required>
+            <option value="">-- Select Department --</option>
+            <option value="">option 1</option>
+            <option value="">option 2</option>
+            <option value="">option3</option>
+    
+          </select>
+        </label>
+
+
+        <label>
+          Position: <span className="required">*</span>
+          <select name="position" required>
+            <option value="">-- Select Position --</option>
+            <option value="">option 1</option>
+            <option value="">option 2</option>
+            <option value="">option3</option>
+          </select>
+        </label>
+
+  
+        <label>
+          Time in the Position: <span className="required">*</span>
+          <select name="timeInPosition" required>
+            <option value="">-- Select Time in Position --</option>
+            <option value="">option 1</option>
+            <option value="">option 2</option>
+            <option value="">option3</option>
+          </select>
+        </label>
+
+        <label>
+          <label style={{ marginBottom: "0px" }}>Optional with our gratitude:</label>
+          Number of direct subordinates: <span className="required">*</span>
+          <select name="" className="input" required>
+            <option value="">-- Select Number of direct subordinates --</option>
+            <option value="Option1">Option 1</option>
+            <option value="Option2">Option 2</option>
+          </select>
+        </label>
+
+        <label>
+          <label style={{ marginBottom: "0px" }}>Optional with our gratitude:</label>
+          Birth year: <span className="required">*</span>
+          <select name="" className="input" required>
+            <option value="">-- Select Birth year --</option>
+            <option value="Option1">Option 1</option>
+            <option value="Option2">Option 2</option>
+          </select>
+        </label>
+
+        <label>
+          <label style={{ marginBottom: "0px" }}>Optional with our gratitude:</label>
+          Education level: <span className="required">*</span>
+          <select name="EducationLever" className="input" required>
+            <option value="">-- Select Education Level --</option>
+            <option value="Option1">Option 1</option>
+            <option value="Option2">Option 2</option>
+          </select>
+        </label>
+
+        <label>
+          Number of Children:
+          <input type="text" name="children" />
+        </label>
+        <div className="btn-submit">
+         <button type="submit" onClick={handleSubmit}>Submit</button>
+        </div>
       </form>
     </div>
   );
