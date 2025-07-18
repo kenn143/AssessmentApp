@@ -9,7 +9,7 @@ import ThankYouPage from "./Component/Thankyou";
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-
+ const [isSubmit, setIsSubmit] = useState(false);
   return (
     <Router>
       <Routes>
@@ -37,9 +37,10 @@ const App = () => {
                 )
               }
             />
+            
           </>
         )}
-        <Route path="/Thankyou" element={<ThankYouPage />} />
+        <Route path="/Thankyou" element={<ThankYouPage/>} />
       </Routes>
     </Router>
   );

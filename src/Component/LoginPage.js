@@ -28,14 +28,21 @@ export default function LoginPage({onLogin}) {
 
       const data = await response.json();
 
+    
+      if(data.records[0].fields.Status === 'InActive'){
+        setError('Access Restricted.');
+        return;
+      }
+
       if (data.records && data.records.length > 0) {
         const user = data.records[0].fields;
-        console.log("user",user)
+
         onLogin();
   const users = {
             email: user.UserName[0],
             clientId: user.ClientId[0],
             loginId: user.LoginId,
+            recordId: data.records[0].id
   }
         saveToken(users);
       } else {
@@ -82,7 +89,7 @@ export default function LoginPage({onLogin}) {
     style={{
       ...styles.input,
       paddingRight: '40px', 
-      width:'400px'
+      width:'345px'
     }}
   />
         <div

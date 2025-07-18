@@ -2,6 +2,8 @@ import React, { useState,useEffect } from "react";
 import '../App.css'
 import { getToken, removeToken } from '../auth';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import ThankYouPage from "./Thankyou";
 
 const columnScores = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
 
@@ -12,6 +14,7 @@ export default function Assessment() {
   const [jsonOutput, setJsonOutput] = useState(null);
   const [boxOrigins, setBoxOrigins] = useState({});
   const user = getToken();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     removeToken();
@@ -164,10 +167,15 @@ export default function Assessment() {
       body: JSON.stringify(json),
     });
     if(response.ok){
-      toast.success("Submitted Successfully!");
+      // toast.success("Submitted Successfully!");
+      navigate('/Thankyou');
      }else{
       toast.error('Error');
      }
+
+   
+
+
 
 
     setJsonOutput(json);

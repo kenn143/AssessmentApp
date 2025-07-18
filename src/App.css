@@ -195,98 +195,86 @@
 }
 
 /* FOR FORM */
+/* Center the form */
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full screen height */
+  background-color: #f9f9f9; /* Light background for contrast */
+}
 
+/* Form container styling */
 .form-container {
-  max-width: 500px;
-  margin: 40px auto;
-  background-color: #fff;
+  width: 700px;
+  background: #fff;
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.form-container h2 {
-  font-size: 18px;
-  margin-bottom: 25px;
-  text-align: left;
-  color: #444;
-  line-height: 1.5;
+/* Header text */
+.header-label {
+  color:black;
+  font-size: 16px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 20px;
 }
 
-.mandatory-note {
-  font-weight: bold;
-  color: #cc0000;
-}
-
+/* Red asterisk */
 .required {
   color: red;
+  font-weight: bold;
 }
 
-form label {
-  display: block;
+/* Form rows */
+.form-row {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 15px;
-  color: #333;
 }
 
-form input {
-  width: 100%;
+.form-row label {
+  flex: 0 0 48%;
+  display: flex;
+  flex-direction: column;
+
+}
+
+input, select {
   padding: 8px;
   margin-top: 5px;
-  box-sizing: border-box;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
-form input[readOnly] {
-  background-color: #e9ecef;
-  color: #555;
-}
-
-form button {
-
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 12px;
+/* Submit button */
+.btn-submit {
+  text-align: right;
   margin-top: 20px;
+}
+
+.btn-submit button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
   font-size: 16px;
-  border-radius: 5px;
   cursor: pointer;
 }
 
-form button:hover {
+.btn-submit button:hover {
   background-color: #0056b3;
 }
 
-form select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  font-size: 14px;
 
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 20px; 
-  padding-right: 40px; 
-}
-
-.btn-submit {
-  text-align: right;
-  margin-top: 17px;
-}
 
 /* THankyou Page */
 
+/* Full screen center */
 .thankyou-container {
   display: flex;
   justify-content: center;
@@ -296,7 +284,7 @@ form select {
   font-family: Arial, sans-serif;
 }
 
-
+/* Box styling */
 .thankyou-box {
   background: #fff;
   padding: 40px 50px;
@@ -307,7 +295,7 @@ form select {
   animation: fadeIn 1s ease-in-out;
 }
 
-
+/* Checkmark style */
 .checkmark {
   font-size: 60px;
   color: #28a745;
