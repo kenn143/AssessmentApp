@@ -173,11 +173,6 @@ export default function Assessment() {
       toast.error('Error');
      }
 
-   
-
-
-
-
     setJsonOutput(json);
   };
   // const handleBoxClick = (index) => {

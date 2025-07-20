@@ -195,7 +195,6 @@
 }
 
 /* FOR FORM */
-/* Center the form */
 .form-wrapper {
   display: flex;
   justify-content: center;
@@ -204,7 +203,6 @@
   background-color: #f9f9f9; /* Light background for contrast */
 }
 
-/* Form container styling */
 .form-container {
   width: 700px;
   background: #fff;
@@ -213,7 +211,6 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Header text */
 .header-label {
   color:black;
   font-size: 16px;
@@ -222,13 +219,13 @@
   margin-bottom: 20px;
 }
 
-/* Red asterisk */
+
 .required {
   color: red;
   font-weight: bold;
 }
 
-/* Form rows */
+
 .form-row {
   display: flex;
   justify-content: space-between;
@@ -250,7 +247,6 @@ input, select {
   font-size: 14px;
 }
 
-/* Submit button */
 .btn-submit {
   text-align: right;
   margin-top: 20px;
@@ -274,7 +270,6 @@ input, select {
 
 /* THankyou Page */
 
-/* Full screen center */
 .thankyou-container {
   display: flex;
   justify-content: center;
@@ -284,7 +279,6 @@ input, select {
   font-family: Arial, sans-serif;
 }
 
-/* Box styling */
 .thankyou-box {
   background: #fff;
   padding: 40px 50px;
@@ -295,7 +289,6 @@ input, select {
   animation: fadeIn 1s ease-in-out;
 }
 
-/* Checkmark style */
 .checkmark {
   font-size: 60px;
   color: #28a745;

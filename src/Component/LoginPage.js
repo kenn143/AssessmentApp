@@ -27,10 +27,6 @@ export default function LoginPage({onLogin}) {
       );
 
       const data = await response.json();
-
-    
-    
-
       if (data.records && data.records.length > 0) {
         const user = data.records[0].fields;
         if(data.records[0].fields.Status === 'InActive'){
@@ -39,7 +35,7 @@ export default function LoginPage({onLogin}) {
           return;
         }
 
-                onLogin();
+         onLogin();
           const users = {
                     email: user.UserName[0],
                     clientId: user.ClientId[0],
