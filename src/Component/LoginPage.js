@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { saveToken } from '../auth';
+import { removeToken, saveToken } from '../auth';
 
 export default function LoginPage({onLogin}) {
   const [email, setEmail] = useState('');
@@ -29,21 +29,23 @@ export default function LoginPage({onLogin}) {
       const data = await response.json();
 
     
-      if(data.records[0].fields.Status === 'InActive'){
-        setError('Access Restricted.');
-        return;
-      }
+    
 
       if (data.records && data.records.length > 0) {
         const user = data.records[0].fields;
+        if(data.records[0].fields.Status === 'InActive'){
+          setError('Access Restricted.');
+        removeToken();
+          return;
+        }
 
-        onLogin();
-  const users = {
-            email: user.UserName[0],
-            clientId: user.ClientId[0],
-            loginId: user.LoginId,
-            recordId: data.records[0].id
-  }
+                onLogin();
+          const users = {
+                    email: user.UserName[0],
+                    clientId: user.ClientId[0],
+                    loginId: user.LoginId,
+                    recordId: data.records[0].id
+          }
         saveToken(users);
       } else {
         setError('Invalid email or password.');
