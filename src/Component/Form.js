@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../auth";
 
 export default function Form({ onSubmit }) {
   const navigate = useNavigate();
+  const id = getToken()?.UserId;
+  const [companyId,setCompanyId] = useState("");
 
 
   const [formData, setFormData] = useState({
@@ -18,8 +20,13 @@ export default function Form({ onSubmit }) {
     subordinates: "",
     birthYear: "",
     educationLevel: "",
-    children: ""
+    children: "",
+    yearJoined:""
   });
+  const [departments, setDepartments] = useState([]);
+  const [positions,setPositions] = useState([]);
+  const [companyName, setCompanyName] = useState("");
+  const [educational, setEducational] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,17 +66,145 @@ export default function Form({ onSubmit }) {
   
     //   const result = await response.json();
     //   console.log("API Response:", result);
+    console.log("the form",formData)
   
       if (onSubmit) onSubmit(formData);
-    console.log("onsublimit",onSubmit())
+
   
       navigate("/assessment");
     // } catch (error) {
     //   console.error("Error submitting form:", error);
     // }
   };
+
+  useEffect(() => {
+    if (!id) return;
+  
+    const fetchUser = async () => {
+      try {
+        const formula = `{id} = "${id}`;
+        const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl3hESo6R8sdUOZF/${id}`;
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+         const user = data.fields;
+         const compId = user.CompanyId?.[0] || "";
+         const CompanyName = user['Company Name'];
+        //  setCompanyName(CompanyName);
+        setFormData((prevData) =>({
+            ...prevData,
+            companyName:CompanyName
+        }));
+         setCompanyId(compId);
+        await fetchDepartments(user.CompanyId[0]);
+        await fetchPositions(user.CompanyId[0]);
+        fetchEducationLevel();
+          // const user = data.records[0].fields;
+          // console.log("the user is",user)
+          // // const companyId = user["CompanyId"]?.[0] || "";
+          // setFormData((prev) => ({
+          //   ...prev,
+          //   companyName: user.CompanyName || "",
+          //   fullName: user.FullName || "",
+          //   yearJoined: user.YearJoined || "",
+          // }));
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchUser();
+  }, [id]);
+
+  
+  const fetchDepartments = async (companyId) => {
+    try {
+      const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tblAVkHO8htk83jpD`;
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+        },
+      }); 
+      const data = await response.json();
+  
+      const filteredDepartments = data.records
+        .map((rec) => ({
+          id: rec.id,
+          name: rec.fields["Department Name"] || "Unnamed",
+          company: rec.fields["Company"] || [],
+          departmentId: rec.fields["DepartmentId"] || 0
+        }))
+        .filter((dept) => Array.isArray(dept.company) && dept.company.includes(companyId));
+      
+      setDepartments(filteredDepartments);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+    }
+  };
+
+  const fetchPositions = async (companyId) => {
+    try {
+      const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tblNFU6sqPbkzn1D9`;
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+        },
+      });
+  
+      const data = await response.json();
+
+      const filteredPositions = data.records
+        .map((rec) => ({
+          id: rec.id,
+          name: rec.fields["Position Name"] || "NoName",
+          company: rec.fields["CompanyId"] || [],
+          positionId: rec.fields["PositionId"] || 0
+        }))
+        .filter((position) => Array.isArray(position.company) && position.company.includes(companyId));
+  
+      setPositions(filteredPositions);
+    } catch (error) {
+      console.error("Error fetching positions:", error);
+    }
+  };
+  const fetchEducationLevel = async () => {
+    try {
+      const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbloZqjJ8P2ACwnuS`;
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      const filteredEducationLevel = data.records.map((rec) => ({
+        id: rec.id,
+        name: rec.fields["Educational Level"] || "NoName",
+        educationalLevelId: rec.fields["Id"] || "NoId",
+      }));
+  
+      setEducational(filteredEducationLevel);
+    } catch (error) {
+      console.error("Error fetching education levels:", error);
+    }
+  };
   
 
+console.log("positionId",formData)
   return (
     <div className="form-wrapper">
       <div className="form-container">
@@ -90,6 +225,20 @@ export default function Form({ onSubmit }) {
           </label>
 
           <div className="form-row">
+          <label>
+              <div style={{ flexDirection: "row" }}>
+                Full Name: <span className="required">*</span>
+              </div>
+              <input
+                type="text"
+                name="yearJoined"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+
             <label>
               <div style={{ flexDirection: "row" }}>
                 Company: <span className="required">*</span>
@@ -104,7 +253,7 @@ export default function Form({ onSubmit }) {
               />
             </label>
 
-            <label>
+            {/* <label>
               <div style={{ flexDirection: "row" }}>
                 Year Joined: <span className="required">*</span>
               </div>
@@ -115,22 +264,22 @@ export default function Form({ onSubmit }) {
                 onChange={handleChange}
                 required
               />
-            </label>
+            </label> */}
           </div>
 
           <div className="form-row">
-            {/* <label>
+          <label>
               <div style={{ flexDirection: "row" }}>
-                Time in the company: <span className="required">*</span>
+                Year Joined: <span className="required">*</span>
               </div>
               <input
                 type="text"
-                name="timeInCompany"
-                value={formData.timeInCompany}
+                name="fullName"
+                value={formData.yearJoined}
                 onChange={handleChange}
                 required
               />
-            </label> */}
+            </label>
 
             <label>
               <div style={{ flexDirection: "row" }}>
@@ -143,12 +292,16 @@ export default function Form({ onSubmit }) {
                 required
               >
                 <option value="">-- Select Department --</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                {departments.map((dept) => (
+                  <option key={dept.departmentId} value={dept.departmentId}>
+                    {dept.name}
+                  </option>
+                ))}
               </select>
             </label>
 
-            <label>
+
+            {/* <label>
               <div style={{ flexDirection: "row" }}>
                 Current Position: <span className="required">*</span>
               </div>
@@ -162,14 +315,14 @@ export default function Form({ onSubmit }) {
                 <option value="option1">Option 1</option>
                 <option value="option2">Option 2</option>
               </select>
-            </label>
+            </label> */}
 
           </div>
 
           <div className="form-row" >
-            {/* <label>
+          <label>
               <div style={{ flexDirection: "row" }}>
-                Position: <span className="required">*</span>
+                Current Position: <span className="required">*</span>
               </div>
               <select
                 name="position"
@@ -177,13 +330,16 @@ export default function Form({ onSubmit }) {
                 onChange={handleChange}
                 required
               >
-                <option value="">-- Select Position --</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                <option value="">-- Select position --</option>
+                {positions.map((position) => (
+                  <option key={position.positionId} value={position.positionId}>
+                    {position.name}
+                  </option>
+                ))}
               </select>
-            </label> */}
+            </label>
 
-            <label style={{width:'20px'}}>
+            {/* <label style={{width:'20px'}}>
               <div style={{ flexDirection: "row" }}>
                 Time in the position: <span className="required">*</span>
               </div>
@@ -212,27 +368,48 @@ export default function Form({ onSubmit }) {
                 <option value="option2">Option 2</option>
               </select>
               </div>
-            </label>
-
-
-            <label>
-              <div style={{ flexDirection: "row" }}>
-                Number of direct subordinates:{" "}
-                <span className="required">*</span>
-              </div>
-              <select
-                name="subordinates"
-                value={formData.subordinates}
-                onChange={handleChange}
-              >
-                <option value="">-- Select Number --</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-              </select>
-            </label>
+            </label> */}
+            <label style={{ width: '20px' }}>
+          <div style={{ flexDirection: "row" }}>
+            Time in the position: <span className="required">*</span>
           </div>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+     
+            <select
+              name="timeInPositionMonth"
+              value={formData.timeInPositionMonth}
+              onChange={handleChange}
+              style={{ width: '100px' }}
+              required
+            >
+                <option value="">-- Month --</option>
+                    {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    ))}
+            </select>
 
-          <div className="form-row">
+
+    <select
+      name="timeInPositionYear"
+      value={formData.timeInPositionYear}
+      onChange={handleChange}
+      style={{ width: '100px', marginLeft: '10px' }}
+      required
+    >
+          <option value="">-- Year --</option>
+            {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+    </select>
+  </div>
+</label>
+
+
+
             {/* <label>
               <div style={{ flexDirection: "row" }}>
                 Number of direct subordinates:{" "}
@@ -248,6 +425,27 @@ export default function Form({ onSubmit }) {
                 <option value="option2">Option 2</option>
               </select>
             </label> */}
+          </div>
+
+          <div className="form-row">
+          <label>
+          <div style={{ flexDirection: "row" }}>
+            Number of direct subordinates: <span className="required">*</span>
+          </div>
+          <select
+            name="subordinates"
+            value={formData.subordinates}
+            onChange={handleChange}
+          >
+            <option value="">-- Select Number --</option>
+            {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        </label>
+
 
             <label>
               <div style={{ flexDirection: "row" }}>
@@ -259,10 +457,19 @@ export default function Form({ onSubmit }) {
                 onChange={handleChange}
               >
                 <option value="">-- Select Birth Year --</option>
-                <option value="option1">option1</option>
-                <option value="option2">option2</option>
+                {Array.from(
+                  { length: new Date().getFullYear() - 1950 + 1 }, 
+                  (_, i) => 1950 + i 
+                )
+                  .reverse() 
+                  .map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
               </select>
             </label>
+
           </div>
 
           <div className="form-row">
@@ -277,8 +484,11 @@ export default function Form({ onSubmit }) {
                 onChange={handleChange}
               >
                 <option value="">-- Select Education Level --</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                {educational.map((edu) => (
+          <option key={edu.educationalLevelId} value={edu.educationalLevelId}>
+            {edu.name}
+          </option>
+        ))}
               </select>
             </label>
 
