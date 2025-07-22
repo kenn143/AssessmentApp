@@ -37,45 +37,54 @@ export default function Form({ onSubmit }) {
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    try {
 
+      // const param = {
+      //   fields: { 
+      //     ...formData,   
+      //     Status: 'Active' 
+      //   }
+      // };
+      const param = {
+        fields: JSON.parse(
+          JSON.stringify(formData, (key, value) =>
+            key === "companyName" ? undefined : value
+          )
+        )
+      };
 
+  
 
-//    const param = {
-//         fields: {Status: 'Active'}
-//         }  
+      const endpoint = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl3hESo6R8sdUOZF/${id}`;
+
   
+      const response = await fetch(endpoint, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(param),
+      });
   
-    // const endpoint = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbliz0F42HaYf3X7n/ param`; 
+      if (!response.ok) {
+        throw new Error(`Failed. Status: ${response.status}`);
+      }
   
-    // try {
-    //   const response = await fetch(endpoint, {
-    //     method: "PATCH",
-    //     headers: {
-    //       Authorization: `Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340`,
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(formData), 
-    //   });
-    //   console.log("response",response)
-  
-    //   if (!response.ok) {
-    //     throw new Error(`Failed . Status: ${response.status}`);
-    //   }
-  
-    //   const result = await response.json();
-    //   console.log("API Response:", result);
-    console.log("the form",formData)
+      const result = await response.json();
+      console.log("the result",result)
   
       if (onSubmit) onSubmit(formData);
-
   
       navigate("/assessment");
-    // } catch (error) {
-    //   console.error("Error submitting form:", error);
-    // }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
+  
 
   useEffect(() => {
     if (!id) return;
@@ -98,10 +107,10 @@ export default function Form({ onSubmit }) {
          const user = data.fields;
          const compId = user.CompanyId?.[0] || "";
          const CompanyName = user['Company Name'];
-        //  setCompanyName(CompanyName);
         setFormData((prevData) =>({
             ...prevData,
-            companyName:CompanyName
+            companyName:CompanyName,
+            fullName: user['Full Name']
         }));
          setCompanyId(compId);
         await fetchDepartments(user.CompanyId[0]);
@@ -203,8 +212,6 @@ export default function Form({ onSubmit }) {
     }
   };
   
-
-console.log("positionId",formData)
   return (
     <div className="form-wrapper">
       <div className="form-container">
@@ -231,7 +238,7 @@ console.log("positionId",formData)
               </div>
               <input
                 type="text"
-                name="yearJoined"
+                name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
                 required
@@ -274,7 +281,7 @@ console.log("positionId",formData)
               </div>
               <input
                 type="text"
-                name="fullName"
+                name="yearJoined"
                 value={formData.yearJoined}
                 onChange={handleChange}
                 required
