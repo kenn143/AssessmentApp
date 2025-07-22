@@ -2,6 +2,9 @@ import React, { useState ,useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../auth";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function Form({ onSubmit }) {
   const navigate = useNavigate();
@@ -91,10 +94,13 @@ export default function Form({ onSubmit }) {
       if (!statusResponse.ok) {
         throw new Error(`Status update failed. Status: ${statusResponse.status}`);
       }
-  
+     toast.success("Submitted Successfully!");
       const statusResult = await statusResponse.json();
+     
   
       if (onSubmit) onSubmit(formData);
+
+window.location.reload();
       navigate("/assessment");
   
     } catch (error) {
@@ -125,6 +131,19 @@ export default function Form({ onSubmit }) {
          const user = data.fields;
          const compId = user.CompanyId?.[0] || "";
          const CompanyName = user['Company Name'];
+         const StatementId = user['StatementSetId'];
+
+
+         const existingToken = JSON.parse(localStorage.getItem('jwtToken')) || {};
+
+            const updatedToken = {
+              ...existingToken,
+              StatementId: StatementId ,
+              status: 'Active'
+            };
+
+        localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
+
         setFormData((prevData) =>({
             ...prevData,
             companyName:CompanyName,
@@ -284,17 +303,27 @@ export default function Form({ onSubmit }) {
           </div>
 
           <div className="form-row">
-          <label>
+        <label>
               <div style={{ flexDirection: "row" }}>
                 Year Joined: <span className="required">*</span>
               </div>
-              <input
-                type="number"
+              <select
                 name="yearJoined"
                 value={formData.yearJoined}
                 onChange={handleChange}
-                required
-              />
+              >
+                <option value="">-- Select Year --</option>
+                {Array.from(
+                  { length: new Date().getFullYear() - 1950 + 1 }, 
+                  (_, i) => 1950 + i 
+                )
+                  .reverse() 
+                  .map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+              </select>
             </label>
 
             <label>
@@ -390,6 +419,21 @@ export default function Form({ onSubmit }) {
             Time in the position: <span className="required">*</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
+
+                   <select
+                  name="timeInPositionYear"
+                  value={formData.timeInPositionYear}
+                  onChange={handleChange}
+                  style={{ width: '100px', marginLeft: '10px' }}
+                  required
+                >
+                      <option value=""> year(s) </option>
+                        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+                          <option key={num} value={num}>
+                            {num}
+                          </option>
+                        ))}
+                </select>
      
             <select
               name="timeInPositionMonth"
@@ -398,8 +442,8 @@ export default function Form({ onSubmit }) {
               style={{ width: '100px' }}
               required
             >
-                <option value="">-- Month --</option>
-                    {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+                <option value=""> month(s) </option>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
                       <option key={num} value={num}>
                         {num}
                       </option>
@@ -407,20 +451,7 @@ export default function Form({ onSubmit }) {
             </select>
 
 
-                <select
-                  name="timeInPositionYear"
-                  value={formData.timeInPositionYear}
-                  onChange={handleChange}
-                  style={{ width: '100px', marginLeft: '10px' }}
-                  required
-                >
-                      <option value="">-- Year --</option>
-                        {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
-                          <option key={num} value={num}>
-                            {num}
-                          </option>
-                        ))}
-                </select>
+         
               </div>
         </label>
 
@@ -506,6 +537,7 @@ export default function Form({ onSubmit }) {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

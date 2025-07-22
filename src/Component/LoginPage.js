@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { removeToken, saveToken } from '../auth';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function LoginPage({onLogin}) {
   const [email, setEmail] = useState('');
@@ -43,11 +46,14 @@ export default function LoginPage({onLogin}) {
                     // clientId: user.ClientId[0],
                     loginId: user.LoginId,
                     recordId: data.records[0].id,
-                    UserId: user.UserId[0]
+                    UserId: user.UserId[0],
+                    status:user.Status
           }
+         
         
         saveToken(users);
       } else {
+       
         setError('Invalid email or password.');
       }
     } catch (err) {
@@ -160,6 +166,7 @@ export default function LoginPage({onLogin}) {
           {error && <p style={styles.error}>{error}</p>}
         </form>
       </div>
+ 
     </div>
   );
 }

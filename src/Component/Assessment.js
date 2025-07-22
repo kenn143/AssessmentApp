@@ -233,38 +233,40 @@ export default function Assessment() {
     setRightBoxes(newRight);
   };
 
-  useEffect(() => {
-    const fetchBoxes = async () => {
-      try {
-        const response = await fetch(
-          "https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl4Q1XBZEuQtNCTG",
-          {
-            method: "GET",
-            headers: {
-              Authorization:
-                "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
-              "Content-Type": "application/json",
-            },
-          }
-        );
-  
-        if (!response.ok) throw new Error("Fetch failed");
-  
-        const data = await response.json();
-        console.log("Webhook result:", data);
-  
-        const record = data.records[0]; 
-        const fields = record.fields;
-        const boxes = Array.from({ length: 25 }, (_, i) => fields[`Statement${i + 1}`] || null);
-  
-        setLeftBoxes(boxes);
-      } catch (error) {
-        console.error("Error fetching boxes:", error);
-      }
-    };
-  
-    fetchBoxes();
-  }, []);
+useEffect(() => {
+  const fetchBoxes = async () => {
+    try {
+      const getToken = JSON.parse(localStorage.getItem('jwtToken')) || {};
+      const statementId = getToken.StatementId;
+   
+      const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl4Q1XBZEuQtNCTG/${statementId}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization:
+            "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("Fetch failed");
+
+      const data = await response.json();
+      console.log("Webhook result:", data);
+
+      const fields = data.fields;
+      const boxes = Array.from({ length: 25 }, (_, i) => fields[`Statement${i + 1}`] || null);
+
+      setLeftBoxes(boxes);
+    } catch (error) {
+      console.error("Error fetching boxes:", error);
+    }
+  };
+
+  fetchBoxes();
+}, []);
+
   
 
   
