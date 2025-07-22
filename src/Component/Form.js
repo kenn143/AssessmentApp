@@ -39,27 +39,23 @@ export default function Form({ onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+  const record = getToken()?.recordId;
     try {
-
-      // const param = {
-      //   fields: { 
-      //     ...formData,   
-      //     Status: 'Active' 
-      //   }
-      // };
       const param = {
-        fields: JSON.parse(
-          JSON.stringify(formData, (key, value) =>
-            key === "companyName" ? undefined : value
-          )
-        )
+        fields: { 
+          "FullName": formData.fullName,  
+          "Position": formData.position,
+          "Department": formData.department,
+          "YearsJoined": Number(formData.yearJoined) || 0, 
+          "TimeInThePosition": `${formData.timeInPositionMonth} month ${formData.timeInPositionYear} year`,
+          "NumberOfDirectSub": Number(formData.subordinates) || 0,
+          "BirthYear": Number(formData.birthYear) || 0,
+          "NumberOfChildren": Number(formData.children) || 0,
+          "EducationalLevel": formData.educationLevel
+        }
       };
-
-  
-
+      
       const endpoint = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl3hESo6R8sdUOZF/${id}`;
-
   
       const response = await fetch(endpoint, {
         method: "PATCH",
@@ -75,15 +71,37 @@ export default function Form({ onSubmit }) {
       }
   
       const result = await response.json();
-      console.log("the result",result)
+  
+      const statusParam = {
+        fields: {
+          "Status": "Active"  
+        }
+      };
+  
+      const statusEndpoint = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbliz0F42HaYf3X7n/${record}`;
+      const statusResponse = await fetch(statusEndpoint, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(statusParam),
+      });
+  
+      if (!statusResponse.ok) {
+        throw new Error(`Status update failed. Status: ${statusResponse.status}`);
+      }
+  
+      const statusResult = await statusResponse.json();
   
       if (onSubmit) onSubmit(formData);
-  
       navigate("/assessment");
+  
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
+  
   
 
   useEffect(() => {
@@ -110,22 +128,13 @@ export default function Form({ onSubmit }) {
         setFormData((prevData) =>({
             ...prevData,
             companyName:CompanyName,
-            fullName: user['Full Name']
+            fullName: user['FullName']
         }));
          setCompanyId(compId);
         await fetchDepartments(user.CompanyId[0]);
         await fetchPositions(user.CompanyId[0]);
         fetchEducationLevel();
-          // const user = data.records[0].fields;
-          // console.log("the user is",user)
-          // // const companyId = user["CompanyId"]?.[0] || "";
-          // setFormData((prev) => ({
-          //   ...prev,
-          //   companyName: user.CompanyName || "",
-          //   fullName: user.FullName || "",
-          //   yearJoined: user.YearJoined || "",
-          // }));
-        
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -280,7 +289,7 @@ export default function Form({ onSubmit }) {
                 Year Joined: <span className="required">*</span>
               </div>
               <input
-                type="text"
+                type="number"
                 name="yearJoined"
                 value={formData.yearJoined}
                 onChange={handleChange}
@@ -300,7 +309,7 @@ export default function Form({ onSubmit }) {
               >
                 <option value="">-- Select Department --</option>
                 {departments.map((dept) => (
-                  <option key={dept.departmentId} value={dept.departmentId}>
+                  <option key={dept.name} value={dept.name}>
                     {dept.name}
                   </option>
                 ))}
@@ -339,7 +348,7 @@ export default function Form({ onSubmit }) {
               >
                 <option value="">-- Select position --</option>
                 {positions.map((position) => (
-                  <option key={position.positionId} value={position.positionId}>
+                  <option key={position.name} value={position.name}>
                     {position.name}
                   </option>
                 ))}
@@ -398,40 +407,23 @@ export default function Form({ onSubmit }) {
             </select>
 
 
-    <select
-      name="timeInPositionYear"
-      value={formData.timeInPositionYear}
-      onChange={handleChange}
-      style={{ width: '100px', marginLeft: '10px' }}
-      required
-    >
-          <option value="">-- Year --</option>
-            {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-    </select>
-  </div>
-</label>
-
-
-
-            {/* <label>
-              <div style={{ flexDirection: "row" }}>
-                Number of direct subordinates:{" "}
-                <span className="required">*</span>
+                <select
+                  name="timeInPositionYear"
+                  value={formData.timeInPositionYear}
+                  onChange={handleChange}
+                  style={{ width: '100px', marginLeft: '10px' }}
+                  required
+                >
+                      <option value="">-- Year --</option>
+                        {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+                          <option key={num} value={num}>
+                            {num}
+                          </option>
+                        ))}
+                </select>
               </div>
-              <select
-                name="subordinates"
-                value={formData.subordinates}
-                onChange={handleChange}
-              >
-                <option value="">-- Select Number --</option>
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-              </select>
-            </label> */}
+        </label>
+
           </div>
 
           <div className="form-row">
@@ -443,6 +435,7 @@ export default function Form({ onSubmit }) {
             name="subordinates"
             value={formData.subordinates}
             onChange={handleChange}
+            
           >
             <option value="">-- Select Number --</option>
             {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
@@ -452,8 +445,6 @@ export default function Form({ onSubmit }) {
             ))}
           </select>
         </label>
-
-
             <label>
               <div style={{ flexDirection: "row" }}>
                 Birth year: <span className="required">*</span>
@@ -492,7 +483,7 @@ export default function Form({ onSubmit }) {
               >
                 <option value="">-- Select Education Level --</option>
                 {educational.map((edu) => (
-          <option key={edu.educationalLevelId} value={edu.educationalLevelId}>
+          <option key={edu.name} value={edu.name}>
             {edu.name}
           </option>
         ))}
@@ -502,7 +493,7 @@ export default function Form({ onSubmit }) {
             <label>
               Number of Children:
               <input
-                type="text"
+                type="number"
                 name="children"
                 value={formData.children}
                 onChange={handleChange}
