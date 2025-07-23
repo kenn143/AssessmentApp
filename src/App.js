@@ -73,6 +73,7 @@ const App = () => {
         <Route path="/Thankyou" element={<ThankYouPage />} />
       </Routes>
     </Router>
+    
   );
 };
 

@@ -73,7 +73,8 @@ export default function Form({ onSubmit }) {
       if (!response.ok) {
         throw new Error(`Failed. Status: ${response.status}`);
       }
-  
+     
+      toast.success("Submitted Successfully!");
       const result = await response.json();
   
       const statusParam = {
@@ -95,7 +96,7 @@ export default function Form({ onSubmit }) {
       if (!statusResponse.ok) {
         throw new Error(`Status update failed. Status: ${statusResponse.status}`);
       }
-     toast.success("Submitted Successfully!");
+    
       const statusResult = await statusResponse.json();    
 
         const existingToken = JSON.parse(localStorage.getItem('jwtToken')) || {};
@@ -112,7 +113,12 @@ export default function Form({ onSubmit }) {
       if (onSubmit) onSubmit(formData);
 
       window.location.reload();
-      navigate("/assessment");
+   
+
+          setTimeout(() => {
+           navigate("/assessment");
+          }, 9000);
+     
   
     } catch (error) {
       console.error("Error submitting form:", error);
