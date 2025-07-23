@@ -10,6 +10,7 @@ export default function Form({ onSubmit }) {
   const navigate = useNavigate();
   const id = getToken()?.UserId;
   const [companyId,setCompanyId] = useState("");
+  const [statementId,SetStatementId] = useState("");
 
 
   const [formData, setFormData] = useState({
@@ -95,12 +96,22 @@ export default function Form({ onSubmit }) {
         throw new Error(`Status update failed. Status: ${statusResponse.status}`);
       }
      toast.success("Submitted Successfully!");
-      const statusResult = await statusResponse.json();
+      const statusResult = await statusResponse.json();    
+
+        const existingToken = JSON.parse(localStorage.getItem('jwtToken')) || {};
+
+            const updatedToken = {
+              ...existingToken,
+              StatementId: statementId ,
+              status: 'Active'
+            };
+
+        localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
      
   
       if (onSubmit) onSubmit(formData);
 
-window.location.reload();
+      window.location.reload();
       navigate("/assessment");
   
     } catch (error) {
@@ -132,17 +143,18 @@ window.location.reload();
          const compId = user.CompanyId?.[0] || "";
          const CompanyName = user['Company Name'];
          const StatementId = user['StatementSetId'];
+         SetStatementId(user['StatementSetId'])
 
 
-         const existingToken = JSON.parse(localStorage.getItem('jwtToken')) || {};
+        //  const existingToken = JSON.parse(localStorage.getItem('jwtToken')) || {};
 
-            const updatedToken = {
-              ...existingToken,
-              StatementId: StatementId ,
-              status: 'Active'
-            };
+        //     const updatedToken = {
+        //       ...existingToken,
+        //       StatementId: StatementId ,
+        //       status: 'Active'
+        //     };
 
-        localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
+        // localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
 
         setFormData((prevData) =>({
             ...prevData,
@@ -418,13 +430,13 @@ window.location.reload();
           <div style={{ flexDirection: "row" }}>
             Time in the position: <span className="required">*</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ display: 'flex', flexDirection: 'row' ,gap:'7px'}}>
 
                    <select
                   name="timeInPositionYear"
                   value={formData.timeInPositionYear}
                   onChange={handleChange}
-                  style={{ width: '100px', marginLeft: '10px' }}
+                  style={{ width: '90px', marginLeft: '10px' }}
                   required
                 >
                       <option value=""> year(s) </option>
@@ -433,13 +445,13 @@ window.location.reload();
                             {num}
                           </option>
                         ))}
-                </select>
+                </select> <div style={{display:'flex',alignItems:'center',fontSize:'16px',marginRight:'10px',marginLeft:'-5px'}}>year(s)</div>
      
             <select
               name="timeInPositionMonth"
               value={formData.timeInPositionMonth}
               onChange={handleChange}
-              style={{ width: '100px' }}
+              style={{ width: '90px' }}
               required
             >
                 <option value=""> month(s) </option>
@@ -450,7 +462,7 @@ window.location.reload();
                     ))}
             </select>
 
-
+                <div style={{display:'flex',alignItems:'center',fontSize:'16px',marginLeft:'-5px'}}>month(s)</div>
          
               </div>
         </label>

@@ -12,57 +12,92 @@ export default function LoginPage({onLogin}) {
   const [loading, setLoading] = useState(false);
 
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    const formula = `AND(UserName = "${email}", Password = "${password}")`;
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      const response = await fetch(
-        ` https://api.airtable.com/v0/apprbTATge0ug6jk3/tbliz0F42HaYf3X7n?filterByFormula=${encodeURIComponent(formula)}`,
-        {
-          headers: {
-            Authorization: `Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+  const formula = `AND(UserName = "${email}", Password = "${password}")`;
 
-      const data = await response.json();
+  try {
+    const response = await fetch(
+      `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbliz0F42HaYf3X7n?filterByFormula=${encodeURIComponent(formula)}`,
+      {
+        headers: {
+          Authorization: `Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-      if (data.records && data.records.length > 0) {
-        const user = data.records[0].fields;
-        if(data.records[0].fields.Status === 'InActive'){
-          setError('Access Restricted.');
+    const data = await response.json();
+
+    if (data.records && data.records.length > 0) {
+      const user = data.records[0].fields;
+
+      if (user.Status === 'InActive') {
+        setError('Access Restricted.');
         removeToken();
-          return;
-        }
-                onLogin();
+        return;
+      }
 
-   
-          const users = {
-                    email: user.UserName[0],
-                    // clientId: user.ClientId[0],
-                    loginId: user.LoginId,
-                    recordId: data.records[0].id,
-                    UserId: user.UserId[0],
-                    status:user.Status
-          }
-         
+      const users = {
+        email: user.UserName[0],
+        loginId: user.LoginId,
+        recordId: data.records[0].id,
+        UserId: user.UserId[0],
+        status: user.Status,
+      };
+
+      if (user.Status === 'Active') {
+        const id = user.UserId[0];
         
-        saveToken(users);
-      } else {
-       
-        setError('Invalid email or password.');
+        try {
+          const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl3hESo6R8sdUOZF/${id}`;
+          const response2 = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response2.ok) throw new Error(`HTTP error! Status: ${response2.status}`);
+
+          const data2 = await response2.json();
+          const detailUser = data2.fields;
+
+          const StatementId = detailUser['StatementSetId'] || "";
+
+      
+          const updatedToken = { ...users, StatementId,  };
+
+          localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
+          console.log("Final token saved:", updatedToken);
+
+          saveToken(updatedToken);
+          onLogin(); 
+
+        } catch (error) {
+          console.error("Error fetching StatementId:", error);
+        }
+      }else{
+            saveToken(users);
+          onLogin(); 
       }
-    } catch (err) {
-      console.error(err);
-      setError('Login failed');
-    }finally {
-        setLoading(false); 
-      }
-  };
+    } else {
+      setError('Invalid email or password.');
+    }
+  } catch (err) {
+    console.error(err);
+    setError('Login failed');
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+     
 
   return (
     <div style={styles.container}>
@@ -87,19 +122,19 @@ export default function LoginPage({onLogin}) {
             required
             style={styles.input}
           /> */}
-<div style={{ position: 'relative' }}>
-  <input
-    type={showPassword ? 'text' : 'password'}
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    placeholder="Password"
-    required
-    style={{
-      ...styles.input,
-      paddingRight: '40px', 
-      width:'345px'
-    }}
-  />
+      <div style={{ position: 'relative' }}>
+        <input
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+          style={{
+            ...styles.input,
+            paddingRight: '40px', 
+            width:'345px'
+          }}
+        />
         <div
             onClick={() => setShowPassword(!showPassword)}
             style={{
