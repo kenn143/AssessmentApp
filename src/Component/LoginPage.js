@@ -48,7 +48,7 @@ const handleLogin = async (e) => {
         UserId: user.UserId[0],
         status: user.Status,
       };
-
+  
       if (user.Status === 'Active') {
         const id = user.UserId[0];
         
@@ -73,7 +73,7 @@ const handleLogin = async (e) => {
           const updatedToken = { ...users, StatementId,FullName  };
 
           localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
-          console.log("Final token saved:", updatedToken);
+
 
           saveToken(updatedToken);
           onLogin(); 
@@ -82,8 +82,32 @@ const handleLogin = async (e) => {
           console.error("Error fetching StatementId:", error);
         }
       }else{
-            saveToken(users);
+          const id = user.UserId[0];    
+          const url = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbl3hESo6R8sdUOZF/${id}`;
+          const response3 = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340",
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response3.ok) throw new Error(`HTTP error! Status: ${response3.status}`);
+
+          const data3 = await response3.json();
+          const detailUser3 = data3.fields;
+
+          const StatementId = detailUser3['StatementSetId'] || "";
+          const FullName = detailUser3['FullName'] || "";
+      
+          const updatedToken = { ...users, StatementId,FullName  };
+
+
+          localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
+
+          saveToken(updatedToken);
           onLogin(); 
+
       }
     } else {
       setError('Invalid email or password.');

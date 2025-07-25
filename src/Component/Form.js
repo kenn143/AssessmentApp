@@ -73,15 +73,15 @@ export default function Form({ onSubmit }) {
       if (!response.ok) {
         throw new Error(`Failed. Status: ${response.status}`);
       }
-    const data = await response.json();
-  const detailUser = data.fields
-      const FullName = detailUser['FullName'] || "";
+//     const data = await response.json();
+//   const detailUser = data.fields
+//       const FullName = detailUser['FullName'] || "";
+//   const existingToken1 = JSON.parse(localStorage.getItem('jwtToken')) || {};
+// const updatedToken1 = { ...existingToken1, FullName };
 
-const updatedToken1 = { ...getToken(), FullName };
+// localStorage.setItem('jwtToken', JSON.stringify(updatedToken1));
 
-localStorage.setItem('jwtToken', JSON.stringify(updatedToken1));
-
-saveToken(updatedToken1);
+// saveToken(updatedToken1);
      
       toast.success("Submitted Successfully!");
       const result = await response.json();
@@ -124,9 +124,9 @@ saveToken(updatedToken1);
       window.location.reload();
    
 
-          setTimeout(() => {
+         
            navigate("/assessment");
-          }, 9000);
+          
      
   
     } catch (error) {
