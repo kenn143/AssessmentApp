@@ -138,43 +138,95 @@ export default function Assessment() {
     return offset + boxIndex;
   };
 
-  const generateJSON = async() => {
-    const result = [];
+  const generateJSON = async () => {
+  const result = [];
+    const record = getToken()?.recordId;
 
-
-    pyramidRows.forEach((row, rowIndex) => {
-      row.forEach((box, boxIndex) => {
-        if (box) {
-          const columnIndex = getColumnIndex(rowIndex, boxIndex);
-          const score = columnScores[columnIndex];
-          result.push({
-            box,
-            column: columnIndex + 1,
-            score,
-          });
-        }
-      });
+  pyramidRows.forEach((row, rowIndex) => {
+    row.forEach((box, boxIndex) => {
+      if (box) {
+        const columnIndex = getColumnIndex(rowIndex, boxIndex);
+        const score = columnScores[columnIndex];
+        result.push(score); 
+      }
     });
-    const json = {
-      record:result
+  });
+
+  const json = {
+    fields: {
+      S1Score: result[0] ?? null,
+      S2Score: result[1] ?? null,
+      S3Score: result[2] ?? null,
+      S4Score: result[3] ?? null,
+      S5Score: result[4] ?? null,
+      S6Score: result[5] ?? null,
+      S7Score: result[6] ?? null,
+      S8Score: result[7] ?? null,
+      S9Score: result[8] ?? null,
+      S10Score: result[9] ?? null,
+      S11Score: result[10] ?? null,
+      S12Score: result[11] ?? null,
+      S13Score: result[12] ?? null,
+      S14Score: result[13] ?? null,
+      S15Score: result[14] ?? null,
+      S16Score: result[15] ?? null,
+      S17Score: result[16] ?? null,
+      S18Score: result[17] ?? null,
+      S19Score: result[18] ?? null,
+      S20Score: result[19] ?? null,
+      S21Score: result[20] ?? null,
+      S22Score: result[21] ?? null,
+      S23Score: result[22] ?? null,
+      S24Score: result[23] ?? null,
+      S25Score: result[24] ?? null,
+      ["Full Name"]: getToken()?.FullName,
+    
     }
-
-  const response = await fetch('https://hook.us2.make.com/415jpaj3alwy9nceagf5rg7oprt8s6v6', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(json),
-    });
-    if(response.ok){
-      // toast.success("Submitted Successfully!");
-      navigate('/Thankyou');
-     }else{
-      toast.error('Error');
-     }
-
-    setJsonOutput(json);
   };
+
+ const response = await fetch(
+      'https://api.airtable.com/v0/apprbTATge0ug6jk3/tblwDZqKptoa1VVtu',
+      {
+        method: 'POST',
+        headers: {
+          Authorization:
+            'Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(json),
+      }
+    );
+  if(response.ok){
+      const statusParam = {
+        fields: {
+          "Status": "Inactive"  
+        }
+      };
+  
+      const statusEndpoint = `https://api.airtable.com/v0/apprbTATge0ug6jk3/tbliz0F42HaYf3X7n/${record}`;
+      const statusResponse = await fetch(statusEndpoint, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer patsk91KQpyv7XFYJ.4ebc8f620e3d60c96b0d874ee9dd0f5ca39dc3e1a9618c271a12cf494d31d340`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(statusParam),
+      });
+  
+      if (!statusResponse.ok) {
+        throw new Error(`Status update failed. Status: ${statusResponse.status}`);
+      }
+    
+      const statusResult = await statusResponse.json();    
+
+    navigate('/Thankyou');
+  } else {
+    toast.error('Error');
+  }
+
+  setJsonOutput(json);
+};
+
   // const handleBoxClick = (index) => {
   //   console.log("index",index)
   //   const box = rightBoxes[index];
@@ -398,6 +450,9 @@ useEffect(() => {
         <button className="generate-btn" onClick={generateJSON}>
           Submit
         </button>
+        {jsonOutput && (
+          <pre className="json-output">{JSON.stringify(jsonOutput,null,2)}</pre>
+        )}
         </div>
 
       </div>

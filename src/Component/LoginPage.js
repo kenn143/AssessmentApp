@@ -35,7 +35,7 @@ const handleLogin = async (e) => {
     if (data.records && data.records.length > 0) {
       const user = data.records[0].fields;
 
-      if (user.Status === 'InActive') {
+      if (user.Status === 'Inactive') {
         setError('Access Restricted.');
         removeToken();
         return;
@@ -68,9 +68,9 @@ const handleLogin = async (e) => {
           const detailUser = data2.fields;
 
           const StatementId = detailUser['StatementSetId'] || "";
-
+          const FullName = detailUser['FullName'] || "";
       
-          const updatedToken = { ...users, StatementId,  };
+          const updatedToken = { ...users, StatementId,FullName  };
 
           localStorage.setItem('jwtToken', JSON.stringify(updatedToken));
           console.log("Final token saved:", updatedToken);

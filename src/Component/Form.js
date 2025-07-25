@@ -1,7 +1,7 @@
 import React, { useState ,useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
-import { getToken } from "../auth";
+import { getToken,saveToken } from "../auth";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
@@ -73,6 +73,15 @@ export default function Form({ onSubmit }) {
       if (!response.ok) {
         throw new Error(`Failed. Status: ${response.status}`);
       }
+    const data = await response.json();
+  const detailUser = data.fields
+      const FullName = detailUser['FullName'] || "";
+
+const updatedToken1 = { ...getToken(), FullName };
+
+localStorage.setItem('jwtToken', JSON.stringify(updatedToken1));
+
+saveToken(updatedToken1);
      
       toast.success("Submitted Successfully!");
       const result = await response.json();
