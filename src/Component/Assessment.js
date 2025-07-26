@@ -323,8 +323,30 @@ useEffect(() => {
 
   
   return (
+    <div style={{display:'flex',flexDirection:'column',gap:'5px'}} >
+        <div className="header">
+  <div className="header-left">
+    <img src="/Image/MainLogo.png" alt="Logo" className="logo" />
+  </div>
+  <div className="header-right">
+    <button className="header-btn">Tutorial</button>
+    <button className="header-btn"   onClick={handleLogout}>Sign Out</button>
+    <button className="header-btn-submit" onClick={generateJSON}>SUBMIT</button>
+  </div>
+</div>
   <div className="container">
-  
+    <div style={{display:'flex',flexDirection:'column'}}>
+     <div className="select-statement-section">
+  <div className="select-header">Select Statement Here</div>
+  <div className="select-content">
+    <p>
+      The following statements represent the<br />
+      priorities for the company. Select and drag statements from here onto the pyramid.
+    </p>
+  </div>
+</div>
+
+    
       <div
         className="column left"
         onDrop={handleDropToLeft}
@@ -345,6 +367,7 @@ useEffect(() => {
           )
         )}
       </div>
+      </div>
 
       <div className="center-divider"></div>
 
@@ -356,7 +379,7 @@ useEffect(() => {
         width: "100%",                 
         display: "flex",
         justifyContent: "flex-end",     
-        padding: "10px",
+        // padding: "10px",
         boxSizing: "border-box",
       }}
     >
@@ -369,7 +392,7 @@ useEffect(() => {
         }}
       >
         {/* <div>{user?.email}</div> */}
-        <button
+        {/* <button
           onClick={handleLogout}
           // style={{
           //   padding: "9px 15px",
@@ -385,11 +408,28 @@ useEffect(() => {
           className="logout-btn"
         >
           Logout
-        </button>
+        </button> */}
       </div>
     </div>
 
-    
+   <div className="sort-statement-section">
+  <div className="sort-header">Sort the Statement Here</div>
+  <div className="sort-content">
+    <p>
+      Sort these 25 statements on the pyramid from the most <br/>
+      important at the right of the pyramid (+4) to the least<br/>
+      important bottom left (-4)<br/>
+      You can move the statement around on the pyramid as often has <br/>
+      needed until you are satisfied. There is no time limitation for <br/>
+      this task.<br/>
+      Please note that the sorting within a column of the pyramid has <br/>
+      no relevance regarding the statements importance.<br/>
+      Once you are done, please click the submit button.
+
+
+    </p>
+  </div>
+</div>
         <div style={{ borderBottom: '2px solid black' }}>
         <div className="pyramid-rows" >
           {pyramidRows.map((row, rowIndex) => {
@@ -447,9 +487,9 @@ useEffect(() => {
                   ))}
             </div>
       <div className="submit">
-        <button className="generate-btn" onClick={generateJSON}>
+        {/* <button className="generate-btn" onClick={generateJSON}>
           Submit
-        </button>
+        </button> */}
         {jsonOutput && (
           <pre className="json-output">{JSON.stringify(jsonOutput,null,2)}</pre>
         )}
@@ -457,6 +497,7 @@ useEffect(() => {
 
       </div>
       <ToastContainer />
+    </div>
     </div>
   );
 };
