@@ -341,7 +341,7 @@ useEffect(() => {
   <div className="select-content">
     <p>
       The following statements represent the<br />
-      priorities for the company. Select and drag statements from here onto the pyramid.
+      priorities for the company. Select and drag<br/> statements from here onto the pyramid.
     </p>
   </div>
 </div>
