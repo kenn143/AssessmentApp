@@ -319,11 +319,12 @@ useEffect(() => {
   fetchBoxes();
 }, []);
 
-  
+
 
   
   return (
     <div style={{display:'flex',flexDirection:'column',gap:'5px'}} >
+     
         <div className="header">
   <div className="header-left">
     <img src="/Image/MainLogo.png" alt="Logo" className="logo" />
@@ -335,18 +336,17 @@ useEffect(() => {
   </div>
 </div>
   <div className="container">
-    <div style={{display:'flex',flexDirection:'column'}}>
+    <div style={{display:'flex',flexDirection:'column',backgroundColor:'white'}}>
      <div className="select-statement-section">
   <div className="select-header">Select Statement Here</div>
   <div className="select-content">
     <p>
       The following statements represent the<br />
-      priorities for the company. Select and drag<br/> statements from here onto the pyramid.
+      priorities for your company. Select and drag<br/> statements from here onto the pyramid.
     </p>
   </div>
 </div>
 
-    
       <div
         className="column left"
         onDrop={handleDropToLeft}
@@ -369,7 +369,9 @@ useEffect(() => {
       </div>
       </div>
 
-      <div className="center-divider"></div>
+      <div className="center-divider">
+
+      </div>
 
       <div className="column right" >
 
@@ -418,12 +420,12 @@ useEffect(() => {
     <p>
       Sort these 25 statements on the pyramid from the most <br/>
       important at the right of the pyramid (+4) to the least<br/>
-      important bottom left (-4)<br/>
+      important bottom left (-4)<br/><br/>
       You can move the statement around on the pyramid as often has <br/>
       needed until you are satisfied. There is no time limitation for <br/>
-      this task.<br/>
+      this task.<br/><br/>
       Please note that the sorting within a column of the pyramid has <br/>
-      no relevance regarding the statements importance.<br/>
+      no relevance regarding the statements importance.<br/><br/>
       Once you are done, please click the submit button.
 
 
