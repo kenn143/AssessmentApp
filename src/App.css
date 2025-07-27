@@ -76,7 +76,7 @@
 .draggable-box,
 .empty-box {
   width: 80px;
-  height: 45px;
+  height: 50px;
   background-color: #FFFA96;
   border: 1px solid #333;
   display: flex;
@@ -86,7 +86,7 @@
   margin: 5px;
   cursor: grab;
   font-size:12px;
-  padding: 8px 16px 16px 8px;
+  padding: 11px 16px 16px 11px;
   color:black;
   font-family: Arial;
   border-radius: 4px;
@@ -124,13 +124,13 @@
 
 .pyramid-box {
   width:80px;
-  height: 45px;
+  height: 50px;
   background-color: #f2f2f2;
   border: 1px solid #aaa;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px 16px 8px;
+  padding: 11px 16px 16px 11px;
   font-family: Arial;
   border-radius: 4px;
 
@@ -139,10 +139,10 @@
 
 .pyramid-box.filled {
    width:80px;
-  height: 45px;
+  height: 50px;
   background-color:lightblue;
   font-size: 12px;
-   padding: 8px 16px 16px 8px;
+   padding: 11px 16px 16px 11px;
   overflow: hidden;
   font-family: Arial;
 }
@@ -346,8 +346,8 @@ input, select {
   position: fixed;
 
   background-color: white;
-  width: 95%;
-  max-width: 1470px;
+  width: 97%;
+  /* max-width: 1470px; */
   margin-left: 10px;
   height: 70px;
   padding: 0 20px;
