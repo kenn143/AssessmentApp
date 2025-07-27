@@ -111,7 +111,7 @@
 .pyramid-grid {
   display: grid;
   grid-template-columns: repeat(9, 60px);
-  gap: 60px;
+  gap: 65px;
   justify-content: center;
 }
 
@@ -119,7 +119,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top:-90px;
+  /* margin-top:-80px; */
 }
 
 .pyramid-box {
@@ -448,7 +448,7 @@ input, select {
 }
 
 .sort-statement-section {
-  width: 95%;
+  width: 40%;
   max-width: 1200px;
   /* margin: 5px; */
   border-radius: 10px;
@@ -474,6 +474,8 @@ input, select {
   color: black;
   line-height: 17px;
   font-family: Arial;
+
+  
 }
 
 
