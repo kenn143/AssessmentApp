@@ -86,7 +86,7 @@
   margin: 5px;
   cursor: grab;
   font-size:12px;
-  padding: 11px 16px 16px 11px;
+  padding: 15px 16px 16px 15px;
   color:black;
   font-family: Arial;
   border-radius: 4px;
@@ -130,7 +130,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 11px 16px 16px 11px;
+  padding: 15px 16px 16px 15px;
   font-family: Arial;
   border-radius: 4px;
 
@@ -142,7 +142,7 @@
   height: 50px;
   background-color:lightblue;
   font-size: 12px;
-   padding: 11px 16px 16px 11px;
+   padding: 15px 16px 16px 15px;
   overflow: hidden;
   font-family: Arial;
 }
