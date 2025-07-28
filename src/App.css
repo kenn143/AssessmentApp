@@ -59,7 +59,7 @@
   flex-wrap: wrap;
   flex-direction: row;
   align-content: flex-start;
-  max-width: 280px;
+  max-width: 300px;
   padding:20px;
 
 
@@ -75,7 +75,7 @@
 
 .draggable-box,
 .empty-box {
-  width: 80px;
+  width: 95px;
   height: 50px;
   background-color: #FFFA96;
   border: 1px solid #333;
@@ -111,19 +111,19 @@
 .pyramid-grid {
   display: grid;
   grid-template-columns: repeat(9, 60px);
-  gap: 65px;
+  gap: 75px;
   justify-content: center;
 }
 
 .pyramid-rows {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   /* margin-top:-80px; */
 }
 
 .pyramid-box {
-  width:80px;
+  width:95px;
   height: 50px;
   background-color: #f2f2f2;
   border: 1px solid #aaa;
@@ -138,7 +138,7 @@
 }
 
 .pyramid-box.filled {
-   width:80px;
+   width:95px;
   height: 50px;
   background-color:lightblue;
   font-size: 12px;
