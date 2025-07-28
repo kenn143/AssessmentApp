@@ -432,7 +432,7 @@ useEffect(() => {
     </p>
   </div>
 </div>
-        <div style={{ borderBottom: '2px solid black' }}>
+        <div style={{ borderBottom: '2px solid black', marginTop:'-92px'}}>
         <div className="pyramid-rows" >
           {pyramidRows.map((row, rowIndex) => {
             const rowWidth = rowPattern[rowIndex];
