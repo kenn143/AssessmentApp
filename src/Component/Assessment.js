@@ -336,7 +336,7 @@ useEffect(() => {
   </div>
 </div>
   <div className="container">
-    <div style={{display:'flex',flexDirection:'column',backgroundColor:'white'}}>
+    <div style={{display:'flex',flexDirection:'column',backgroundColor:'white',height:'1000px'}}>
      <div className="select-statement-section">
   <div className="select-header">Select Statement Here</div>
   <div className="select-content">
